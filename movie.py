@@ -17,7 +17,7 @@ user_similarity = cosine_similarity(pivot_table)
 user_similarity_df = pd.DataFrame(user_similarity, index=pivot_table.index, columns=pivot_table.index)
 
 # TMDB API Setup
-api_key = "87ca1a58d8af64e3bea559458135cde2"
+api_key = "87ca1a58d8a6f4e3bea559458135cde2"
 def fetch_movie_details(title):
     url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={title}"
     try:
@@ -36,7 +36,7 @@ def fetch_movie_details(title):
 
 # Streamlit UI
 st.set_page_config(page_title="Movie Recommender", layout="centered")
-st.title("\U0001F3AC Movie Recommendation System")
+st.title("🎬 Movie Recommendation System")
 
 user_id_input = st.number_input("Select User ID to Recommend For", min_value=1, max_value=int(df.user_id.max()), step=1)
 
