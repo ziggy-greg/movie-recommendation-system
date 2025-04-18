@@ -22,7 +22,8 @@ def fetch_movie_details(title):
     url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={title}"
     response = requests.get(url)
     data = response.json()
-    if data['results']:
+
+    if 'results' in data and data['results']:  # Safe check
         movie = data['results'][0]
         poster_path = movie.get('poster_path')
         overview = movie.get('overview')
