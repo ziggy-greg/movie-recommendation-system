@@ -1,14 +1,18 @@
 import streamlit as st
 import pandas as pd
 import requests
+import os
 from surprise import Dataset, Reader, SVD
 from surprise.model_selection import train_test_split
-from surprise import accuracy
 
 # Load dataset
-ratings = pd.read_csv("u.data", sep='\t', names=["user_id", "movie_id", "rating", "timestamp"])
-movies = pd.read_csv("u.item", sep='|', encoding="ISO-8859-1", usecols=[0, 1], names=["movie_id", "title"], engine='python')
-df = pd.merge(ratings, movies, on="movie_id")
+@st.cache_data
+def load_data():
+    ratings = pd.read_csv("u.data", sep='\t', names=["user_id", "movie_id", "rating", "timestamp"])
+    movies = pd.read_csv("u.item", sep='|', encoding="ISO-8859-1", usecols=[0, 1], names=["movie_id", "title"], engine='python')
+    return pd.merge(ratings, movies, on="movie_id"), movies
+
+df, movies = load_data()
 
 # Build surprise dataset
 reader = Reader(rating_scale=(1, 5))
@@ -23,7 +27,7 @@ model.fit(trainset)
 movie_id_to_title = dict(zip(movies.movie_id, movies.title))
 
 # TMDB API Setup
-api_key = "87ca1a58d8a6f4e3bea559458135cde2"
+api_key = os.getenv("TMDB_API_KEY", "87ca1a58d8a6f4e3bea559458135cde2")
 def fetch_movie_details(title):
     url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={title}"
     response = requests.get(url)
@@ -65,7 +69,6 @@ if st.button("Get Recommendations"):
                 st.write("No poster available")
         with col2:
             st.write(overview)
-
 
 st.markdown("---")
 st.markdown("Made by Ziggy Greg | [GitHub](https://github.com/ziggy-greg)")
