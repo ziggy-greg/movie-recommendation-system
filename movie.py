@@ -5,8 +5,8 @@ import requests
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Load dataset
-ratings = pd.read_csv("/content/u.data", sep='\t', names=["user_id", "movie_id", "rating", "timestamp"])
-movies = pd.read_csv("/content/u.item", sep='|', encoding="ISO-8859-1", usecols=[0, 1], names=["movie_id", "title"], engine='python')
+ratings = pd.read_csv("u.data", sep='\t', names=["user_id", "movie_id", "rating", "timestamp"])
+movies = pd.read_csv("u.item", sep='|', encoding="ISO-8859-1", usecols=[0, 1], names=["movie_id", "title"], engine='python')
 df = pd.merge(ratings, movies, on="movie_id")
 
 # Create pivot table for users and movies
