@@ -20,16 +20,19 @@ user_similarity_df = pd.DataFrame(user_similarity, index=pivot_table.index, colu
 api_key = "87ca1a58d8af64e3bea559458135cde2"
 def fetch_movie_details(title):
     url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={title}"
-    response = requests.get(url)
-    data = response.json()
-
-    if 'results' in data and data['results']:  # Safe check
-        movie = data['results'][0]
-        poster_path = movie.get('poster_path')
-        overview = movie.get('overview')
-        poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
-        return poster_url, overview
-    return None, "No overview found."
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if 'results' in data and data['results']:
+            movie = data['results'][0]
+            poster_path = movie.get('poster_path')
+            overview = movie.get('overview') or "No overview found."
+            poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
+            return poster_url, overview
+        else:
+            return None, "No overview found."
+    except:
+        return None, "Error retrieving data."
 
 # Streamlit UI
 st.set_page_config(page_title="Movie Recommender", layout="centered")
